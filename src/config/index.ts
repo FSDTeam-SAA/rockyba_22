@@ -5,4 +5,9 @@ export default {
   port: process.env.PORT,
   mogodbUrl: process.env.MONGODB_URL,
   nodeEnv: process.env.NODE_ENV,
+
+  email: {
+    emailAddress: process.env.EMAIL_ADDRESS,
+    emailPass: process.env.EMAIL_PASSWORD,
+  },
 };
