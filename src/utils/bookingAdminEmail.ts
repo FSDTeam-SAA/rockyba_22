@@ -1,13 +1,8 @@
-export const bookingConfirmationEmail = (booking: any) => `
+export const bookingAdminEmail = (booking: any) => `
   <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
-    <h2 style="color: #4CAF50;">Booking Confirmation</h2>
+    <h2 style="color: #d9534f;">New Booking Notification</h2>
 
-    <p>Dear ${booking.personalInfo.salutation} ${
-  booking.personalInfo.lastName
-},</p>
-
-    
-    <p>Thank you for your booking with <strong>Cleava</strong>! Here are the details of your request:</p>
+    <p>A new booking has been received. Below are the details:</p>
 
     <h3>📋 Booking Details</h3>
     <ul>
@@ -35,7 +30,7 @@ export const bookingConfirmationEmail = (booking: any) => `
       }</li>
     </ul>
 
-    <h3>👤 Personal Information</h3>
+    <h3>👤 Customer Information</h3>
     <ul>
       <li><strong>Name:</strong> ${booking.personalInfo.salutation} ${
   booking.personalInfo.firstName
@@ -47,7 +42,7 @@ export const bookingConfirmationEmail = (booking: any) => `
 }, ${booking.personalInfo.address.zipCode} ${
   booking.personalInfo.address.city
 }</li>
-      <li><strong>How Did You Find Us:</strong> ${
+      <li><strong>How Did They Find Us:</strong> ${
         booking.personalInfo.howDidYouFindUs || "N/A"
       }</li>
     </ul>
@@ -60,7 +55,8 @@ export const bookingConfirmationEmail = (booking: any) => `
       <li><strong>Total Price:</strong> $${booking.price.total.toFixed(2)}</li>
     </ul>
 
-    <p style="margin-top: 30px;">We will contact you soon to confirm your appointment.</p>
-     <p style="margin-top: 20px;">Best regards,<br>Your Cleaning Service Team</p>
+    <p style="margin-top: 20px; font-size: 12px; color: #999;">
+      This is an automated notification sent to administrators.
+    </p>
   </div>
 `;

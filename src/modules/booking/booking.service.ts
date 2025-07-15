@@ -1,4 +1,5 @@
 import config from "../../config";
+import { bookingAdminEmail } from "../../utils/bookingAdminEmail";
 import { bookingConfirmationEmail } from "../../utils/bookingConfirmation";
 import sendEmail from "../../utils/sendEmail";
 import { IBooking } from "./booking.interface";
@@ -12,19 +13,28 @@ const createBookingInDb = async (payload: IBooking) => {
     throw new Error("Please provide preferred date and time");
   }
 
-  const recipients = [
-    payload.personalInfo.email,
-    config.email.emailAddress,
-  ].join(",");
-
+  // send email to customer
   await sendEmail({
-    to: recipients,
+    to: payload.personalInfo.email,
     subject: "Booking Confirmation",
     html: bookingConfirmationEmail(payload),
   });
 
+  // send email to admin
+  await sendEmail({
+    to: config.email.emailAddress as string,
+    subject: "New Booking Notification",
+    html: bookingAdminEmail(payload),
+  });
+
+  // save to DB
   const result = await booking.create(payload);
-  return result;
+
+  return {
+    success: true,
+    message: "Booking details sent to your email.",
+    bookingId: result._id,
+  };
 };
 
 export const bookingService = {
