@@ -1,49 +1,59 @@
 import { model, Schema } from "mongoose";
+import { IBooking } from "./booking.interface";
 
-const cleaningPackageSchema = new Schema({
-  type: {
-    type: String,
-    enum: ["executive", "ceo"],
-    required: true,
+const BookingSchema = new Schema<IBooking>(
+  {
+    apartmentSize: { type: String, required: true },
+    cleaningInterval: { type: String, required: true },
+    householdSize: { type: Number, required: true },
+
+    cleaningPackage: {
+      type: {
+        type: String,
+        enum: ["executive", "ceo"],
+        required: true,
+      },
+      includedServices: [String],
+    },
+
+    extras: {
+      specialRequests: { type: String },
+    },
+
+    appointment: {
+      hasPreferredDate: { type: Boolean, required: true },
+      preferredDate: { type: Date },
+      preferredTime: { type: String },
+    },
+
+    personalInfo: {
+      salutation: {
+        type: String,
+        enum: ["Mr", "Ms"],
+        required: true,
+      },
+      firstName: { type: String, required: true },
+      lastName: { type: String, required: true },
+      phone: { type: String, required: true },
+      email: { type: String, required: true },
+      address: {
+        houseNumber: { type: String, required: true },
+        zipCode: { type: String, required: true },
+        street: { type: String, required: true },
+        city: { type: String, required: true },
+      },
+      howDidYouFindUs: { type: String },
+    },
+
+    price: {
+      perCleaning: { type: Number, required: true },
+      total: { type: Number, required: true },
+    },
   },
-  includedServices: [String],
-});
+  {
+    timestamps: true,
+  }
+);
 
-const appointmentSchema = new Schema({
-  hasPreferredDate: { type: Boolean, required: true },
-  preferredDate: { type: Date },
-  preferredTime: { type: String },
-});
-
-const extrasSchema = new Schema({
-  specialRequests: { type: String },
-});
-
-const priceSchema = new Schema({
-  perCleaning: { type: Number, required: true },
-  total: { type: Number, required: true },
-});
-
-const bookingInfoSchema = new Schema({
-  apartmentSize: { type: String, required: true },
-  cleaningInterval: { type: String, required: true },
-  householdSize: { type: Number, required: true },
-  cleaningPackage: { type: cleaningPackageSchema, required: true },
-  extras: { type: extrasSchema },
-  appointment: { type: appointmentSchema, required: true },
-  price: { type: priceSchema, required: true },
-  agreedToPrivacyPolicy: { type: Boolean, required: true },
-  personalInfo: {
-    type: Schema.Types.ObjectId,
-    ref: "PersonalInfo",
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
-const booking = model("Booking", bookingInfoSchema);
-
+const booking = model("booking", BookingSchema);
 export default booking;

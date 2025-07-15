@@ -1,18 +1,19 @@
-import { Types } from "mongoose";
-
-export interface ICleaningPackage {
-  type: "executive" | "ceo";
-  includedServices: string[];
+interface IAddress {
+  houseNumber: string;
+  zipCode: string;
+  street: string;
+  city: string;
 }
 
-export interface IAppointment {
+interface IAppointment {
   hasPreferredDate: boolean;
   preferredDate?: Date;
   preferredTime?: string;
 }
 
-export interface IExtras {
-  specialRequests?: string;
+export interface ICleaningPackage {
+  type: "executive" | "ceo";
+  includedServices: string[];
 }
 
 export interface IPrice {
@@ -20,15 +21,26 @@ export interface IPrice {
   total: number;
 }
 
-export interface IBookingInfo {
+export interface IBooking extends Document {
   apartmentSize: string;
   cleaningInterval: string;
   householdSize: number;
+
   cleaningPackage: ICleaningPackage;
-  extras?: IExtras;
+  extras?: {
+    specialRequests?: string;
+  };
   appointment: IAppointment;
+  personalInfo: {
+    salutation: "Mr" | "Ms";
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+    address: IAddress;
+    howDidYouFindUs?: string;
+  };
   price: IPrice;
   agreedToPrivacyPolicy: boolean;
-  personalInfo: Types.ObjectId;
-  createdAt?: Date;
+  createdAt: Date;
 }
