@@ -6,7 +6,6 @@ const BookingSchema = new Schema<IBooking>(
     apartmentSize: { type: String, required: true },
     cleaningInterval: { type: String, required: true },
     householdSize: { type: Number, required: true },
-
     cleaningPackage: {
       type: {
         type: String,
@@ -15,17 +14,14 @@ const BookingSchema = new Schema<IBooking>(
       },
       includedServices: [String],
     },
-
     extras: {
       specialRequests: { type: String },
     },
-
     appointment: {
       hasPreferredDate: { type: Boolean, required: true },
       preferredDate: { type: Date },
       preferredTime: { type: String },
     },
-
     personalInfo: {
       salutation: {
         type: String,
@@ -44,7 +40,6 @@ const BookingSchema = new Schema<IBooking>(
       },
       howDidYouFindUs: { type: String },
     },
-
     price: {
       perCleaning: { type: Number, required: true },
       total: { type: Number, required: true },

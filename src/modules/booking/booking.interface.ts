@@ -25,7 +25,6 @@ export interface IBooking extends Document {
   apartmentSize: string;
   cleaningInterval: string;
   householdSize: number;
-
   cleaningPackage: ICleaningPackage;
   extras?: {
     specialRequests?: string;
@@ -41,6 +40,6 @@ export interface IBooking extends Document {
     howDidYouFindUs?: string;
   };
   price: IPrice;
-  agreedToPrivacyPolicy: boolean;
+  // agreedToPrivacyPolicy: boolean;
   createdAt: Date;
 }
