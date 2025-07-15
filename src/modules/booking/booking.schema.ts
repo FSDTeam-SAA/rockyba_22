@@ -12,12 +12,11 @@ const BookingSchema = new Schema<IBooking>(
         enum: ["executive", "ceo"],
         required: true,
       },
-      includedServices: [String],
+      // includedServices: [String],
     },
-    extras: {
-      specialRequests: { type: String },
-    },
+    specialWish: { type: String },
     appointment: {
+      //? if it true then preferredDate and preferredTime is required.......
       hasPreferredDate: { type: Boolean, required: true },
       preferredDate: { type: Date },
       preferredTime: { type: String },

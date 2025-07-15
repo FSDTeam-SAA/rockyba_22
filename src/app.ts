@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import globalErrorHandler from "./middleware/globalErrorHandler";
 import notFound from "./middleware/notFound";
+import router from "./router";
 
 const app: Application = express();
 
@@ -16,8 +17,7 @@ const corseOptions = {
 app.use(cors(corseOptions));
 app.use(cookieParser());
 
-//* this is router handling
-// app.use("/api", router);
+app.use("/api/v1", router);
 
 app.get("/", (req, res) => {
   res.send("Hey there!");

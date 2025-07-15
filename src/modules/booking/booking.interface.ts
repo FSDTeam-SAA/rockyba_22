@@ -13,7 +13,7 @@ interface IAppointment {
 
 export interface ICleaningPackage {
   type: "executive" | "ceo";
-  includedServices: string[];
+  // includedServices: string[];
 }
 
 export interface IPrice {
@@ -26,9 +26,7 @@ export interface IBooking extends Document {
   cleaningInterval: string;
   householdSize: number;
   cleaningPackage: ICleaningPackage;
-  extras?: {
-    specialRequests?: string;
-  };
+  specialWish: string;
   appointment: IAppointment;
   personalInfo: {
     salutation: "Mr" | "Ms";
