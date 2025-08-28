@@ -25,7 +25,6 @@ const BookingSchema = new Schema<IBooking>(
       salutation: {
         type: String,
         enum: ["Mr", "Ms"],
-        required: true,
       },
       firstName: { type: String, required: true },
       lastName: { type: String, required: true },
