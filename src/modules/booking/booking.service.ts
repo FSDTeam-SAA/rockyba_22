@@ -6,6 +6,7 @@ import { IBooking } from "./booking.interface";
 import booking from "./booking.schema";
 
 const createBookingInDb = async (payload: IBooking) => {
+  console.log("payload",payload);
   if (
     payload.appointment.hasPreferredDate === true &&
     (!payload.appointment.preferredDate || !payload.appointment.preferredTime)
