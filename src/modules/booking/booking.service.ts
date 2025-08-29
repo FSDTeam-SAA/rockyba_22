@@ -28,6 +28,12 @@ const createBookingInDb = async (payload: IBooking) => {
     html: bookingAdminEmail(payload),
   });
 
+if (
+  payload.appointment.hasPreferredDate === true &&
+  (!payload.appointment.preferredDate || !payload.appointment.preferredTime)
+) {
+  throw new Error('Please provide preferred date and time')
+}
   // save to DB
   const result = await booking.create(payload);
 
