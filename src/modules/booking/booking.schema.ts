@@ -9,7 +9,7 @@ const BookingSchema = new Schema<IBooking>(
     cleaningPackage: {
       type: {
         type: String,
-        enum: ["executive", "ceo"],
+        enum: ['executive', 'ceo'],
         required: true,
       },
       // includedServices: [String],
@@ -24,8 +24,9 @@ const BookingSchema = new Schema<IBooking>(
     personalInfo: {
       salutation: {
         type: String,
-        enum: ["Mr", "Ms"],
-        default: "Mr",
+        enum: ['Mr', 'Ms'],
+        required: false,
+        default: null,
       },
       firstName: { type: String, required: true },
       lastName: { type: String, required: true },
@@ -47,7 +48,7 @@ const BookingSchema = new Schema<IBooking>(
   {
     timestamps: true,
   }
-);
+)
 
 const booking = model("booking", BookingSchema);
 export default booking;
