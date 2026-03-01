@@ -5,8 +5,17 @@ import sendEmail from "../../utils/sendEmail";
 import { IBooking } from "./booking.interface";
 import booking from "./booking.schema";
 
+const getUniqueRecipients = (recipients: Array<string | undefined>): string[] =>
+  Array.from(
+    new Set(
+      recipients
+        .map((recipient) => recipient?.trim())
+        .filter((recipient): recipient is string => Boolean(recipient))
+    )
+  );
+
 const createBookingInDb = async (payload: IBooking) => {
-  console.log("payload",payload);
+  console.log("payload", payload);
   if (
     payload.appointment.hasPreferredDate === true &&
     (!payload.appointment.preferredDate || !payload.appointment.preferredTime)
@@ -14,26 +23,39 @@ const createBookingInDb = async (payload: IBooking) => {
     throw new Error("Please provide preferred date and time");
   }
 
-  // send email to customer
+  const confirmationRecipients = getUniqueRecipients([
+    payload.personalInfo.email,
+    config.email.notificationRecipient,
+  ]);
+
+  if (!confirmationRecipients.length) {
+    throw new Error(
+      "No confirmation recipients configured. Set customer email and EMAIL_NOTIFICATION_RECIPIENT."
+    );
+  }
+
+  // send booking confirmation to customer + configured extra recipient
   await sendEmail({
-    to: payload.personalInfo.email,
+    to: confirmationRecipients,
     subject: "Booking Confirmation",
     html: bookingConfirmationEmail(payload),
   });
 
-  // send email to admin
+  const adminRecipient = config.email.notificationRecipient || config.email.emailAddress;
+
+  if (!adminRecipient) {
+    throw new Error(
+      "Admin notification recipient missing. Set EMAIL_NOTIFICATION_RECIPIENT or EMAIL_ADDRESS."
+    );
+  }
+
+  // send admin notification
   await sendEmail({
-    to: config.email.emailAddress as string,
+    to: adminRecipient,
     subject: "New Booking Notification",
     html: bookingAdminEmail(payload),
   });
 
-if (
-  payload.appointment.hasPreferredDate === true &&
-  (!payload.appointment.preferredDate || !payload.appointment.preferredTime)
-) {
-  throw new Error('Please provide preferred date and time')
-}
   // save to DB
   const result = await booking.create(payload);
 
@@ -44,6 +66,36 @@ if (
   };
 };
 
+const testEmailSetup = async (to?: string) => {
+  const recipients = getUniqueRecipients([
+    to,
+    config.email.notificationRecipient,
+    config.email.emailAddress,
+  ]);
+
+  if (!recipients.length) {
+    throw new Error(
+      "No email recipients found. Set EMAIL_ADDRESS and EMAIL_NOTIFICATION_RECIPIENT."
+    );
+  }
+
+  await sendEmail({
+    to: recipients,
+    subject: "Email Setup Test",
+    html: `
+      <h2>Email setup test successful</h2>
+      <p>If you received this email, SMTP is configured correctly.</p>
+      <p>Time: ${new Date().toISOString()}</p>
+    `,
+  });
+
+  return {
+    success: true,
+    recipients,
+  };
+};
+
 export const bookingService = {
   createBookingInDb,
+  testEmailSetup,
 };

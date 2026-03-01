@@ -2,38 +2,44 @@ import config from "../config";
 import nodemailer from "nodemailer";
 
 interface SendEmailPayload {
-  to: string;
+  to: string | string[];
   subject: string;
   html: string;
 }
 
 const sendEmail = async ({ to, subject, html }: SendEmailPayload) => {
-  try {
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: config.email.emailAddress,
-        pass: config.email.emailPass,
-      },
-      tls: {
-        rejectUnauthorized: false,
-      },
-    });
+  const smtpUser = config.email.emailAddress;
+  const smtpPass = config.email.emailPass;
 
-    const mailOptions = {
-      from: config.email.emailAddress,
-      to,
-      subject,
-      html,
-    };
-
-    await transporter.sendMail(mailOptions);
-    return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  if (!smtpUser || !smtpPass) {
+    throw new Error(
+      "Email configuration missing. Set EMAIL_ADDRESS and EMAIL_PASSWORD in .env"
+    );
   }
+
+  const recipients = Array.isArray(to) ? to : [to];
+  const validRecipients = recipients
+    .map((item) => item?.trim())
+    .filter((item): item is string => Boolean(item));
+
+  if (!validRecipients.length) {
+    throw new Error("No valid recipient email address provided.");
+  }
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: smtpUser,
+      pass: smtpPass,
+    },
+  });
+
+  await transporter.sendMail({
+    from: smtpUser,
+    to: validRecipients.join(","),
+    subject,
+    html,
+  });
 };
 
 export default sendEmail;
