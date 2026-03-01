@@ -15,6 +15,19 @@ const createbooking = catchAsync(async (req, res) => {
   });
 });
 
+const testEmailSetup = catchAsync(async (req, res) => {
+  const to = typeof req.query.to === "string" ? req.query.to : undefined;
+  const result = await bookingService.testEmailSetup(to);
+
+  sendResonse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Test email sent successfully",
+    data: result,
+  });
+});
+
 export const bookingController = {
   createbooking,
+  testEmailSetup,
 };
