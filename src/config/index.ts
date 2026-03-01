@@ -9,5 +9,6 @@ export default {
   email: {
     emailAddress: process.env.EMAIL_ADDRESS,
     emailPass: process.env.EMAIL_PASSWORD,
+    notificationRecipient: process.env.EMAIL_NOTIFICATION_RECIPIENT,
   },
 };
